@@ -55,6 +55,39 @@
       $('.modal-trigger').leanModal();
     }
   };
+function movie(id, poster, title,year){
+  this.id = id;
+  this.poster = poster;
+  this.title = title;
+  this.year = year;
+}
+  $('button').on('click', function(event){
+    event.preventDefault();
+    var $searchValue = $("#search")[0].value;
+    $('search').val('');
+    if($searchValue=== ''){
+      alert('Please enter a movie');
+    }
 
-  // ADD YOUR CODE HERE
+    var input = $(event.target).text();
+    // input.append('#search')
+    var $xhr = $.getJSON('https://omdb-api.now.sh/?s=' + $searchValue);
+    $xhr.done(function(data){
+      if($xhr.status !== 200){
+        return
+      }console.log(data);
+      for (let i=0;i<data.Search.length;i++){
+      let id = data.Search[i].imdID;
+      let poster= data.Search[i].Poster;
+      let title= data.Search[i].Title;
+      let year = data.Search[i].Year;
+      let mobject = new movie(id,poster,title,year);
+      movies.push(mobject);
+      }
+
+      renderMovies(movie);
+      movie= [];
+
+    })
+  });
 })();
